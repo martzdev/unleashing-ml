@@ -50,7 +50,7 @@ class KNearestNeighbors {
             // count 'votes' from the first K neighbors
             strcpy(prediction,countVotes(kNN));
             // add the newly predicted point to the dataset
-            //addToDataset(prediction,newPoint);
+            addToDataset(prediction,newPoint);
             // return predictions
             return prediction;
         }

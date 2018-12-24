@@ -3,14 +3,14 @@
 #include <iostream>
 #include <algorithm>
 
-std::ifstream fin("dataset.txt");
+std::ifstream fin("Iris.txt");
 
 void getReq(int &features, int &neighbors, int &size) {
     std::cout << "Numeric features: ";
     std::cin >> features;
     std::cout << "Number of neighbors: ";
     std::cin >> neighbors;
-    std::ifstream lines("dataset.txt");
+    std::ifstream lines("Iris.txt");
     size = std::count(std::istreambuf_iterator<char>(lines), std::istreambuf_iterator<char>(), '\n')+1;
     lines.close();
 }
