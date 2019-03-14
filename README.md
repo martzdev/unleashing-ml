@@ -6,4 +6,4 @@ Implementation of ML algorithms and helper functions for data science in C++
 
 ### Library functions
 - Read CSV files
-- Split CSV files
+- Split datasets in data and labels
