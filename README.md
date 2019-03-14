@@ -1,6 +1,9 @@
 # Unleashing ML
-Machine learning algorithms implemented in C++
+Implementation of ML algorithms and helper functions for data science in C++
 
 ### Algorithms
 - K Nearest Neighbors
-- More soon
+
+### Library functions
+- Read CSV files
+- Split CSV files
