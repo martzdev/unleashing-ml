@@ -11,6 +11,6 @@ int main() {
 	KNearestNeighbors model;
 	model.fit(X, y, 3);
 	std::vector<float> test;
-	test.push_back(6.1), test.push_back(3.0), test.push_back(4.9), test.push_back(1.8);
+	test.push_back(4.3), test.push_back(3.0), test.push_back(1.1), test.push_back(0.1);
 	std::cout << model.predict(test) << std::endl;
 }

@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <map>
 #include <tuple>
+#include <time.h>
+#include <random>
 
 struct datapoint {
 	std::vector<float> values;
