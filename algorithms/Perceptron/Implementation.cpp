@@ -13,4 +13,5 @@ int main() {
     auto y = csv.convertToFloat(fillery)[0];
     Perceptron network;
     network.init(X,y,0.01);
+	network.train(1);
 }

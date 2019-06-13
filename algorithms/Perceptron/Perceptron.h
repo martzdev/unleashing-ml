@@ -1,10 +1,11 @@
 #pragma once
 #include "../../lib/UnleashingML.h"
 
-struct Neuron {
+class Neuron {
+    public:
     float data;
     float weight;
-    struct Neuron *next;
+    Neuron *next;
 };
 
 class Perceptron {
@@ -21,14 +22,30 @@ class Perceptron {
 			printf("ERROR: X and y must have the same sizes.\n");
 		}
 	}
-    void train() {
-        for(size_t i; i<inputLayer.size();i++) {    
-            float result = forwardPropagate(inputLayer[i]);
+    void train(int epochs) {
+        if(epochs<1) epochs = 1;
+        for(size_t it=1;it<=epochs;it++) {
+            for(size_t i=0; i<inputLayer.size();i++) {
+                assignNode(i);    
+                float result = forwardPropagate(inputLayer[i],trueOutputs[i]);
+                printf("Result = %.3f",result);
+            }
         }
     }
     private:
-    void forwardPropagate() {
-        return;
+    void assignNode(size_t poz) {
+        outputLayer = new Neuron();
+        for(size_t i=0;i<inputLayer[poz].size();i++) {
+            inputLayer[poz][i].next = outputLayer;
+        }
+    }
+    float forwardPropagate(std::vector<Neuron> inpt,float yHat) {
+        for(size_t i=0;i<inpt.size();i++) {
+            inpt[i].next->data += inpt[i].data*inpt[i].weight;
+        }
+        float error = pow(outputLayer->data - yHat,2)/2;
+        return error;
+
     }
     void appendToDataset(std::vector<float> point, float label) {
         if(inputSize==0) inputSize = point.size();
@@ -45,10 +62,11 @@ class Perceptron {
             inputVector.push_back(instance);
         }
         trueOutputs.push_back(label);
+        inputLayer.push_back(inputVector);
     }
     float learningRate;
     int inputSize = 0;
     std::vector<std::vector<Neuron>> inputLayer;
     std::vector<float> trueOutputs;
-    Neuron outputLayer;
+    Neuron* outputLayer = NULL;
 };
