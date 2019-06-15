@@ -23,28 +23,51 @@ class Perceptron {
 		}
 	}
     void train(int epochs) {
+        int correct;
         if(epochs<1) epochs = 1;
         for(size_t it=1;it<=epochs;it++) {
             for(size_t i=0; i<inputLayer.size();i++) {
-                assignNode(i);    
-                float result = forwardPropagate(inputLayer[i],trueOutputs[i]);
-                printf("Result = %.3f",result);
+                assignNode(i);
+                float result = forwardPropagate(inputLayer[i]);
+                backPropagate(i,result,trueOutputs[i]);
+                if(result >= 0.5 && trueOutputs[i]==1) correct++;
+                unassignNode(i);
             }
+            printf("Epoch %i - ACC:%2.5f\n",it,calculateAcc(correct));
         }
+        
     }
     private:
+    float calculateError(float outpt, float trueOutpt) {
+        return abs(outpt-trueOutpt);
+    }
+    float calculateAcc(int &good) {
+        float acc = ((inputLayer.size()-good)/inputLayer.size())*100;
+        good = 0;
+        return acc;
+    }
     void assignNode(size_t poz) {
         outputLayer = new Neuron();
         for(size_t i=0;i<inputLayer[poz].size();i++) {
             inputLayer[poz][i].next = outputLayer;
         }
     }
-    float forwardPropagate(std::vector<Neuron> inpt,float yHat) {
+    void unassignNode(size_t poz) {
+        outputLayer->data = 0;
+        for(size_t i=0;i<inputLayer[poz].size();i++) {
+            inputLayer[poz][i].next = NULL;
+        }
+    }
+    void backPropagate(int poz, float outpt, float trueOutpt) {
+        for(int i = 0;i<inputLayer[poz].size();i++) {
+            inputLayer[poz][i].weight += learningRate*(trueOutpt-outpt);
+        }
+    }
+    float forwardPropagate(std::vector<Neuron> inpt) {
         for(size_t i=0;i<inpt.size();i++) {
             inpt[i].next->data += inpt[i].data*inpt[i].weight;
         }
-        float error = pow(outputLayer->data - yHat,2)/2;
-        return error;
+        return outputLayer->data;
 
     }
     void appendToDataset(std::vector<float> point, float label) {
@@ -57,7 +80,7 @@ class Perceptron {
         for(size_t i = 0;i< point.size();i++) {
             Neuron instance;
             instance.data = point[i];
-            instance.weight = rand();
+            instance.weight = (rand()%100+1)/1000;
             instance.next = NULL;
             inputVector.push_back(instance);
         }
