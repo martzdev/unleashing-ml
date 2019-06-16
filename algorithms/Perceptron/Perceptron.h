@@ -11,8 +11,7 @@ class Neuron {
 class Perceptron {
     public:
     void init(std::vector<std::vector<float>> X, std::vector<float> y, float lr) {
-        srand(time(NULL));
-		learningRate = lr;
+		if(lr>0 && lr<1) learningRate = lr;
 		if (X.size() == y.size()) {
 			for (size_t i = 0; i < X.size(); i++) {
 				appendToDataset(X[i], y[i]);
@@ -21,75 +20,72 @@ class Perceptron {
 		else {
 			printf("ERROR: X and y must have the same sizes.\n");
 		}
+        assignNodes();
 	}
     void train(int epochs) {
-        int correct;
         if(epochs<1) epochs = 1;
         for(size_t it=1;it<=epochs;it++) {
-            for(size_t i=0; i<inputLayer.size();i++) {
-                assignNode(i);
-                float result = forwardPropagate(inputLayer[i]);
-                backPropagate(i,result,trueOutputs[i]);
-                if(result >= 0.5 && trueOutputs[i]==1) correct++;
-                unassignNode(i);
+            printf("Epoch %i - ",it);
+            float mae = 0;
+            for(size_t i=0; i<inputs.size();i++) {
+                giveData(inputs[i]);
+                float result = forwardPropagate();
+                backPropagate(result,trueOutputs[i]);
+                mae = calculateError(result,trueOutputs[i]);
             }
-            printf("Epoch %i - ACC:%2.5f\n",it,calculateAcc(correct));
+            printf("MAE: %.3f\n",mae/inputs.size());
         }
         
     }
     private:
-    float calculateError(float outpt, float trueOutpt) {
-        return abs(outpt-trueOutpt);
+    float calculateError(float predicted, float actual) {
+        return abs(predicted-actual);
     }
-    float calculateAcc(int &good) {
-        float acc = ((inputLayer.size()-good)/inputLayer.size())*100;
-        good = 0;
-        return acc;
-    }
-    void assignNode(size_t poz) {
-        outputLayer = new Neuron();
-        for(size_t i=0;i<inputLayer[poz].size();i++) {
-            inputLayer[poz][i].next = outputLayer;
+    void assignNodes() {
+        srand(time(NULL));
+        outputNode = new Neuron();
+        for(size_t i = 0;i<inputSize;i++) {
+            Neuron node;
+            node.weight = (rand()%100+1)/1000;
+            node.next = outputNode;
+            inputLayer.push_back(node);
         }
     }
-    void unassignNode(size_t poz) {
-        outputLayer->data = 0;
-        for(size_t i=0;i<inputLayer[poz].size();i++) {
-            inputLayer[poz][i].next = NULL;
+    void giveData(std::vector<float> inpt) {
+        if(inpt.size()>inputSize || inpt.size() < inputSize) return;
+        for(size_t i = 0;i<inputSize;i++) {
+            inputLayer[i].data = inpt[i];
+        }
+        outputNode->data = 0;
+    }
+    void backPropagate(float outpt,float trueOutpt) {
+        for(size_t i = 0;i<inputLayer.size();i++) {
+            inputLayer[i].weight += learningRate*(trueOutpt-outpt);
         }
     }
-    void backPropagate(int poz, float outpt, float trueOutpt) {
-        for(int i = 0;i<inputLayer[poz].size();i++) {
-            inputLayer[poz][i].weight += learningRate*(trueOutpt-outpt);
+    float forwardPropagate() {
+        for(size_t i=0;i<inputLayer.size();i++) {
+            inputLayer[i].next->data += inputLayer[i].data*inputLayer[i].weight;
         }
-    }
-    float forwardPropagate(std::vector<Neuron> inpt) {
-        for(size_t i=0;i<inpt.size();i++) {
-            inpt[i].next->data += inpt[i].data*inpt[i].weight;
-        }
-        return outputLayer->data;
-
+        return outputNode->data;
     }
     void appendToDataset(std::vector<float> point, float label) {
         if(inputSize==0) inputSize = point.size();
         else if(inputSize!=point.size()) { 
-            printf("WAR: Input size is not constant.\n");
+            printf("ERR: Input size is not constant.\n");
             return;
         }
-        std::vector<Neuron> inputVector;
+        std::vector<float> inputVector;
         for(size_t i = 0;i< point.size();i++) {
-            Neuron instance;
-            instance.data = point[i];
-            instance.weight = (rand()%100+1)/1000;
-            instance.next = NULL;
-            inputVector.push_back(instance);
+            inputVector.push_back(point[i]);
         }
         trueOutputs.push_back(label);
-        inputLayer.push_back(inputVector);
+        inputs.push_back(inputVector);
     }
     float learningRate;
     int inputSize = 0;
-    std::vector<std::vector<Neuron>> inputLayer;
+    std::vector<std::vector<float>> inputs;
     std::vector<float> trueOutputs;
-    Neuron* outputLayer = NULL;
+    std::vector<Neuron> inputLayer;
+    Neuron* outputNode;
 };
