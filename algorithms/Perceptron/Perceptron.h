@@ -10,7 +10,7 @@ class Neuron {
 
 class Perceptron {
     public:
-    void init(std::vector<std::vector<float>> X, std::vector<float> y, float lr) {
+    void compile(std::vector<std::vector<float>> X, std::vector<float> y, float lr) {
 		if(lr>0 && lr<1) learningRate = lr;
 		if (X.size() == y.size()) {
 			for (size_t i = 0; i < X.size(); i++) {

@@ -4,7 +4,7 @@
 int main() {
 	CSVReader csv;
 	auto data = csv.readCSV("data.csv");
-	auto splittedData = csv.splitData(data, 1);
+	auto splittedData = csv.splitData(data, 3);
 	auto unconvertedX = std::get<0>(splittedData);
 	auto unconvertedy = std::get<1>(splittedData);
 	auto X = csv.convertToFloat(unconvertedX);
@@ -12,6 +12,6 @@ int main() {
     fillery.push_back(unconvertedy);
     auto y = csv.convertToFloat(fillery)[0];
     Perceptron network;
-    network.init(X,y,0.001);
-	network.train(12);
+    network.compile(X,y,0.001);
+	network.train(3);
 }
