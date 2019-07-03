@@ -3,7 +3,7 @@ Implementation of ML algorithms and helper functions for data science in C++
 
 ### Algorithms
 - K Nearest Neighbors
-- Perceptron
+- [Perceptron](https://github.com/sturzamihai/unleashing-ml/blob/master/algorithms/Perceptron/README.md)
 
 ### Library functions
 - Read CSV files
