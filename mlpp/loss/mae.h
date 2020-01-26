@@ -1,12 +1,14 @@
 #pragma once
+#include <vector>
 #include "../contracts/iloss.h";
 #include "../utils.h";
 
 class MAE : ILoss
 {
 public:
-    MAE(double y_hat, double y)
+    MAE(std::vector<double> y_hat, std::vector<double> y)
     {
+        if(y_hat.size()!=y.size()) throw "Loss Error: Predicted size and actual size not matching.";
         y_hat_ = y_hat;
         y_ = y;
         Calculate();
@@ -17,9 +19,11 @@ public:
     }
 
 protected:
-    double y_hat_, y_, result_;
+    std::vector<double> y_hat_, y_;
+    double result_ = 0;
     void Calculate()
     {
-        result_ = mlpp::abs<double>(y_hat_ - y_);
+        for(int i = 0;i<y_hat_.size();i++)
+            result_ += mlpp::abs(y_hat_[i] - y_[i]);
     }
 };
