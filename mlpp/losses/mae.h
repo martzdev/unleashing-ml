@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+
 #include "../factories/loss.h"
 #include "../utils.h"
 

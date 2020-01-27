@@ -2,9 +2,13 @@
 
 #include <vector>
 #include <string>
+#include <math.h>
 
 namespace mlpp
 {
+
+template <class T>
+using tensor = std::vector<std::vector<T>>;
 
 double abs(double x)
 {

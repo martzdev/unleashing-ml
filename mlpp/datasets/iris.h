@@ -1,8 +1,7 @@
 #pragma once
 
-#include <fstream>
-#include <string>
 #include "../factories/dataset.h"
+#include "../utils.h"
 
 class IrisData : public Dataset
 {
@@ -18,8 +17,8 @@ public:
             // TODO: implement request logic
         }
     }
-    virtual std::vector<std::vector<double>> GetX() {}
-    virtual std::vector<std::vector<double>> GetY() {}
+    virtual mlpp::tensor<double> GetX() {}
+    virtual mlpp::tensor<double> GetY() {}
 
 protected:
     std::string title_ = "Iris Flower Dataset";

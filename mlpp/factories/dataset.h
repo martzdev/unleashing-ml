@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include "../contracts/idataset.h"
+#include "../utils.h"
 
 class Dataset : public virtual IDataset
 {
@@ -10,8 +10,8 @@ public:
     {
         return title_;
     }
-    virtual std::vector<std::vector<double>> GetX() = 0;
-    virtual std::vector<std::vector<double>> GetY() = 0;
+    virtual mlpp::tensor<double> GetX() = 0;
+    virtual mlpp::tensor<double> GetY() = 0;
 
 protected:
     std::string title_;
