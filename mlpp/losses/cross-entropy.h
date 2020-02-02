@@ -25,7 +25,7 @@ class CategoricalCrossEntropy : public virtual Loss
 public:
     CategoricalCrossEntropy() {}
 
-    virtual void SetCategoricalData(mlpp::tensor<double> y_hat, mlpp::tensor<double> y)
+    virtual void SetCategoricalData(mlpp::tensor<2,double>::type y_hat, mlpp::tensor<2,double>::type y)
     {
         if (y_hat.size() != y.size())
             throw "Loss Error: Predicted size and actual size not matching.";
@@ -36,7 +36,7 @@ public:
     }
 
 protected:
-    mlpp::tensor<double> c_y_hat_, c_y_;
+    mlpp::tensor<2,double>::type c_y_hat_, c_y_;
     virtual void Calculate()
     {
         for (unsigned long i = 0; i < c_y_hat_.size(); i++)
@@ -47,7 +47,4 @@ protected:
         if (result_ != 0)
             result_ = -result_;
     }
-
-    mlpp::tensor<double> y_hat_;
-    mlpp::tensor<double> y_;
 };

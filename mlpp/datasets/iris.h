@@ -1,9 +1,8 @@
 #pragma once
 
-#include "../factories/dataset.h"
 #include "../utils.h"
 
-class IrisData : public Dataset
+class IrisData
 {
 public:
     IrisData(bool local = false, std::string path = "")
@@ -17,8 +16,9 @@ public:
             // TODO: implement request logic
         }
     }
-    virtual mlpp::tensor<double> GetX() {}
-    virtual mlpp::tensor<double> GetY() {}
+
+    // virtual mlpp::tensor<double> GetX() {}
+    // virtual mlpp::tensor<double> GetY() {}
 
 protected:
     std::string title_ = "Iris Flower Dataset";

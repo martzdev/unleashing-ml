@@ -7,8 +7,17 @@
 namespace mlpp
 {
 
-template <class T>
-using tensor = std::vector<std::vector<T>>;
+template <size_t dim, typename T>
+struct tensor
+{
+    typedef std::vector<typename tensor<dim - 1, T>::type> type;
+};
+
+template <typename T>
+struct tensor<0, T>
+{
+    typedef T type;
+};
 
 double abs(double x)
 {
@@ -17,9 +26,9 @@ double abs(double x)
     return x;
 }
 
-std::vector<std::string> SeparateString(std::string raw, std::string delimiter = ",")
+tensor<1, std::string>::type SeparateString(std::string raw, std::string delimiter = ",")
 {
-    std::vector<std::string> tokens;
+    tensor<1, std::string>::type tokens;
 
     size_t pos = 0;
     while ((pos = raw.find(delimiter)) != std::string::npos)
@@ -32,9 +41,9 @@ std::vector<std::string> SeparateString(std::string raw, std::string delimiter =
     return tokens;
 }
 
-std::vector<double> StringVToDouble(std::vector<std::string> unconverted)
+tensor<1, double>::type StringVToDouble(std::vector<std::string> unconverted)
 {
-    std::vector<double> converted(unconverted.size());
+    tensor<1,double>::type converted(unconverted.size());
     std::transform(unconverted.begin(), unconverted.end(), converted.begin(), [](const std::string &val) {
         return std::stod(val);
     });

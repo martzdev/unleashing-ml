@@ -11,7 +11,7 @@ public:
         return result_;
     }
 
-    virtual void SetData(std::vector<double> y_hat, std::vector<double> y)
+    virtual void SetData(mlpp::tensor<1,double>::type y_hat, mlpp::tensor<1,double>::type y)
     {
         if (y_hat.size() != y.size())
             throw "Loss Error: Predicted size and actual size not matching.";
@@ -21,10 +21,10 @@ public:
         Calculate();
     }
 
-    virtual void SetCategoricalData(mlpp::tensor<double> y_hat, mlpp::tensor<double> y) {};
+    virtual void SetCategoricalData(mlpp::tensor<2,double>::type y_hat, mlpp::tensor<2,double>::type y) {};
 
 protected:
-    std::vector<double> y_hat_, y_;
+    mlpp::tensor<1,double>::type y_hat_, y_;
     double result_ = 0;
     virtual void Calculate() = 0;
 };
